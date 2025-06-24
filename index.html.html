@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doğum Günün Kutlu Olsun Sare!</title>
+  <style>
+    body {
+      background-color: #fff5f8;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      margin: 0;
+    }
+    h1 {
+      color: #d63384;
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.25rem;
+      color: #444;
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+    img {
+      width: 80vw;
+      max-width: 300px;
+      cursor: pointer;
+      border-radius: 15px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 10px rgba(214, 51, 132, 0.4);
+    }
+    img:active {
+      transform: scale(0.95);
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Doğum Günün Kutlu Olsun Sare! 🎉</h1>
+  <p>Nice mutlu, sağlıklı, bol kahkahalı yaşlara Sare! 🎂</p>
+
+  <img
+    src="https://static9.depositphotos.com/1465309/1145/v/950/depositphotos_11456202-stock-illustration-birthday-cake.jpg"
+    alt="Doğum günü pastası"
+    id="cake"
+    title="Doğum günü pastası"
+  />
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <audio
+    id="horn-sound"
+    src="https://actions.google.com/sounds/v1/alarms/party_horn.ogg"
+    preload="auto"
+  ></audio>
+
+  <script>
+    const hornSound = document.getElementById('horn-sound');
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const ctx = confettiCanvas.getContext('2d');
+
+    function resizeCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let particles = [];
+
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < 200; i++) {
+        particles.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+          speed: Math.random() * 5 + 2,
+          radius: Math.random() * 5 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      particles.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > confettiCanvas.height) {
+          p.y = -10;
+          p.x = Math.random() * confettiCanvas.width;
+        }
+      });
+      requestAnimationFrame(draw);
+    }
+
+    function startConfetti() {
+      createParticles();
+      draw();
+    }
+
+    function playEffect() {
+      hornSound.currentTime = 0;
+      hornSound.play();
+      startConfetti();
+    }
+
+    document.getElementById('cake').addEventListener('click', playEffect);
+  </script>
+</body>
+</html>
